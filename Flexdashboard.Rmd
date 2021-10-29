@@ -1,0 +1,38 @@
+---
+title: "Flexdashboard"
+author: "JAT"
+date: "29/10/2021"
+output: html_document
+---
+
+
+```{r}
+#install.packages("flexdashboard")
+#install.packages("rmarkdown")
+
+
+#https://rstudio.github.io/flexdashboard/articles/examples.html
+
+#https://ramikrispin.github.io/flexdashboard_example/
+```
+
+
+#```{r}
+
+#wd<-dirname(rstudioapi::getActiveDocumentContext()$path)
+#setwd(wd)
+
+#rmarkdown::draft("index.Rmd", template = "flex_dashboard", package = "flexdashboard")
+#```
+
+
+```{r}
+#Remember to have on the same folder the file: _site.yml
+
+# render the entire site
+#rmarkdown::render_site()
+
+
+# render a single file only
+rmarkdown::render_site("about.Rmd")
+```
