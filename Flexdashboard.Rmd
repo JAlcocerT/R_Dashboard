@@ -10,9 +10,11 @@ output: html_document
 #install.packages("flexdashboard")
 #install.packages("rmarkdown")
 
-
+#https://garrettgman.github.io/rmarkdown/rmarkdown_websites.html
 #https://rstudio.github.io/flexdashboard/articles/examples.html
 
+
+#Thanks for the inspiration to:
 #https://ramikrispin.github.io/flexdashboard_example/
 ```
 
@@ -34,5 +36,5 @@ output: html_document
 
 
 # render a single file only
-rmarkdown::render_site("about.Rmd")
+rmarkdown::render_site("index.Rmd")
 ```
