@@ -15,14 +15,14 @@ output: html_document
 
 
 #Thanks for the inspiration to:
+#https://www.r-bloggers.com/2020/09/deploying-flexdashboard-on-github-pages/
 #https://ramikrispin.github.io/flexdashboard_example/
 ```
 
 
 #```{r}
 
-#wd<-dirname(rstudioapi::getActiveDocumentContext()$path)
-#setwd(wd)
+
 
 #rmarkdown::draft("index.Rmd", template = "flex_dashboard", package = "flexdashboard")
 #```
@@ -34,6 +34,8 @@ output: html_document
 # render the entire site
 #rmarkdown::render_site()
 
+wd<-dirname(rstudioapi::getActiveDocumentContext()$path)
+setwd(wd)
 
 # render a single file only
 rmarkdown::render_site("index.Rmd")
