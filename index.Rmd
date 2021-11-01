@@ -3,7 +3,7 @@ title: "Flex Dashboards"
 author: JAT
 output: 
   flexdashboard::flex_dashboard:
-    orientation: columns
+    orientation: column
     vertical_layout: fill
     source_code: embed
 ---
@@ -12,6 +12,9 @@ output:
 library(flexdashboard)
 ```
 
+
+US unemployment
+=======================================================================
 Column {data-width=500}
 -----------------------------------------------------------------------
 
@@ -65,6 +68,8 @@ fig
 
 
 
+Retirement Facts
+=======================================================================
 
 Column {.tabset data-width=400}
 -----------------------------------------------------------------------
