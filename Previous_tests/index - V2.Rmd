@@ -1,0 +1,262 @@
+---
+title: "Flex Dashboards"
+author: JAT
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: column
+    vertical_layout: fill
+    source_code: embed
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+```
+
+
+US unemployment
+=======================================================================
+Column {data-width=500}
+-----------------------------------------------------------------------
+
+### US unemployment
+
+```{r}
+
+#https://www.r-bloggers.com/2020/09/deploying-flexdashboard-on-github-pages/
+
+library(plotly)
+library(rjson)
+
+url <- 'https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json'
+counties <- rjson::fromJSON(file=url)
+url2<- "https://raw.githubusercontent.com/plotly/datasets/master/fips-unemp-16.csv"
+df <- read.csv(url2, colClasses=c(fips="character"))
+g <- list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  showlakes = TRUE,
+  lakecolor = toRGB('white')
+)
+fig <- plot_ly()
+fig <- fig %>% add_trace(
+    type="choropleth",
+    geojson=counties,
+    locations=df$fips,
+    z=df$unemp,
+    colorscale="Viridis",
+    zmin=0,
+    zmax=12,
+    marker=list(line=list(
+      width=0)
+    )
+  )
+fig <- fig %>% colorbar(title = "Unemployment Rate (%)")
+fig <- fig %>% layout(
+    title = "2016 US Unemployment by County"
+)
+
+fig <- fig %>% layout(
+    geo = g
+  )
+
+fig
+
+#Column {data-width=800}
+#-----------------------------------------------------------------------
+
+```
+
+
+
+Finance related
+=======================================================================
+
+Column {.tabset data-width=400}
+-----------------------------------------------------------------------
+
+### Retirement facts test
+
+
+```{r}
+
+
+library(formattable)
+library(plotly)
+
+max_age=100
+age <- seq(1,max_age, length.out = 100)
+
+inflation=0.02
+savings=12000
+expenses_retirement=15000
+working_age=18
+maturity_age=30
+retirement_age=65
+
+
+max_savings = savings/inflation
+
+retirement_facts <- function(inflation,when, age, savings, expenses_retirement,working_age, maturity_age, retirement_age)
+{
+  
+in_flow=c(rep(0, working_age),seq(0,savings,savings/(maturity_age-working_age-1)),rep(savings, retirement_age-maturity_age),rep(0, max_age-retirement_age))
+
+#print(length(in_flow))
+
+in_flow_theorical=c(rep(0, working_age),seq(0,savings,savings/(maturity_age-working_age-1)),rep(savings, max_age-maturity_age))
+
+out_flow=c(rep(0, retirement_age),rep(savings, max_age-retirement_age))
+
+
+real_savings=rep(0, 100)
+theorical_savings=rep(0, 100)
+
+for (i in 1:length(age)){
+  #print(i)
+  #print(in_flow[i])
+  
+  
+  if (i==1){
+  real_savings[i]=in_flow[i]+0*(1-inflation)
+  theorical_savings[i]=real_savings[i]
+  }else if (i<=retirement_age) {
+    real_savings[i]=in_flow[i]+real_savings[i-1]*(1-inflation)
+    theorical_savings[i]=in_flow_theorical[i]+theorical_savings[i-1]*(1-inflation)
+  }
+  else{
+    real_savings[i]=real_savings[i-1]*(1-inflation)-out_flow[i]
+    theorical_savings[i]=in_flow_theorical[i]+theorical_savings[i-1]*(1-inflation)
+  }
+}
+
+
+df <- data.frame(age, in_flow,in_flow_theorical,out_flow,real_savings,theorical_savings)
+
+
+return(df)
+}
+
+df2<-retirement_facts(0.02,60,age,12000,15000,18,30,65)
+
+
+real_annotations <- list(
+  x=df2$age[df2$real_savings == max(df2$real_savings)], 
+  y=max(df2$real_savings),
+  xref='x', yref='y',
+  text=paste0('Max savings: $',comma(max(df2$real_savings),digits =0)),
+  ax=0, ay=-30
+)
+
+
+retired=which(df2$real_savings < 0)[1]-retirement_age
+#print(paste("Retired during: ",retired," years"))
+
+game_over <- list(
+  #x=df2$age[df2$real_savings == max(df2$real_savings)]+10, 
+  x=which(df2$real_savings < 0)[1],
+  y=0,
+  xref='x', yref='y',
+  text=paste0('Years lasting: ',retired),
+  ax=0, ay=-30
+)
+
+mature_age <- list(
+  x=maturity_age,
+  y=0,
+  xref='x', yref='y',
+  text=paste0('Career plateau, max yearly savings'),
+  ax=0, ay=30
+)
+
+theorical_annotations <- list(
+  x=df2$age[df2$real_savings == max(df2$real_savings)], 
+  y=max(df2$real_savings),
+  xref='x', yref='y',
+  text=paste0(comma(100*max(df2$real_savings)/max_savings,digits=2),'% of theorical max'),
+  ax=30, ay=70
+)
+
+# updatemenus component
+updatemenus <- list(
+  list(
+    active = -1,
+    type= 'buttons',
+    buttons = list(
+       list(
+        label = "Real",
+        method = "update",
+        args = list(list(visible = c(FALSE, TRUE)),
+                    list(title = "Real savings",
+                         annotations = list(c(), real_annotations,game_over,mature_age)))),
+      # list(
+      #   label = "Real",
+      #   method = "update",
+      #   args = list(list(visible = c(FALSE, TRUE)),
+      #               list(title = "Real savings") )),
+                         #,
+                         #annotations = list(c(), high_annotations)))),
+      # list(
+      #   label = "Theorical",
+      #   method = "update",
+      #   args = list(list(visible = c(TRUE, FALSE)),
+      #               list(title = "Theorical savings")))
+                         #,
+                         #annotations = list(low_annotations, c() ))))
+      list(
+        label = "Theorical",
+        method = "update",
+        args = list(list(visible = c(TRUE, FALSE)),
+                    list(title = "Theorical savings",
+                         annotations = list(theorical_annotations, c() ))))
+      
+      ,
+      list(
+        label = "Reset",
+        method = "update",
+        args = list(list(visible = c(TRUE, TRUE)),
+                    list(title = "Combined view",
+                         annotations = list(c(), c()))))
+   
+  )
+))
+
+fig <- df2 %>% plot_ly(type = 'scatter', mode = 'lines') 
+fig <- fig %>% add_lines(x=~age, y=~real_savings, name="real_savings",
+            line=list(color="#33CFA5")) 
+fig <- fig %>% add_lines(x=~age, y=~theorical_savings, name="theorical_savings",
+            line=list(color="#F06A6A")) 
+
+fig <- fig %>% layout(title = "Savings", showlegend=FALSE,
+         xaxis=list(title="Age"),
+         yaxis=list(title="Savings ($)"),
+         updatemenus=updatemenus)
+          
+
+fig
+
+
+```
+
+### Chart C
+
+```{r}
+# volcano is a numeric matrix that ships with R
+fig <- plot_ly(z = ~volcano) %>% add_surface(
+  contours = list(
+    z = list(
+      show=TRUE,
+      usecolormap=TRUE,
+      highlightcolor="#ff0000",
+      project=list(z=TRUE)
+      )
+    )
+  )
+fig <- fig %>% layout(
+    scene = list(
+      camera=list(
+        eye = list(x=1.87, y=0.88, z=-0.64)
+        )
+      )
+  )
+fig
+```
