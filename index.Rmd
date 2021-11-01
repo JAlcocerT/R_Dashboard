@@ -13,7 +13,7 @@ library(flexdashboard)
 Column {data-width=650}
 -----------------------------------------------------------------------
 
-### Chart A
+### US unemployment
 
 ```{r}
 
@@ -60,11 +60,13 @@ fig
 Column {data-width=650}
 -----------------------------------------------------------------------
 
-### Chart B
+### Retirement facts test
 
 
 ```{r}
 
+
+library(formattable)
 library(plotly)
 
 max_age=100
@@ -77,6 +79,8 @@ working_age=18
 maturity_age=30
 retirement_age=65
 
+
+max_savings = savings/inflation
 
 retirement_facts <- function(inflation,when, age, savings, expenses_retirement,working_age, maturity_age, retirement_age)
 {
@@ -114,12 +118,49 @@ for (i in 1:length(age)){
 
 df <- data.frame(age, in_flow,in_flow_theorical,out_flow,real_savings,theorical_savings)
 
+
 return(df)
 }
 
 df2<-retirement_facts(0.02,60,age,12000,15000,18,30,65)
 
 
+real_annotations <- list(
+  x=df2$age[df2$real_savings == max(df2$real_savings)], 
+  y=max(df2$real_savings),
+  xref='x', yref='y',
+  text=paste0('Max savings: $',comma(max(df2$real_savings),digits =0)),
+  ax=0, ay=-30
+)
+
+
+retired=which(df2$real_savings < 0)[1]-retirement_age
+#print(paste("Retired during: ",retired," years"))
+
+game_over <- list(
+  #x=df2$age[df2$real_savings == max(df2$real_savings)]+10, 
+  x=which(df2$real_savings < 0)[1],
+  y=0,
+  xref='x', yref='y',
+  text=paste0('Years lasting: ',retired),
+  ax=0, ay=-30
+)
+
+mature_age <- list(
+  x=maturity_age,
+  y=0,
+  xref='x', yref='y',
+  text=paste0('Career plateau, max yearly savings'),
+  ax=0, ay=30
+)
+
+theorical_annotations <- list(
+  x=df2$age[df2$real_savings == max(df2$real_savings)], 
+  y=max(df2$real_savings),
+  xref='x', yref='y',
+  text=paste0('Got: $',comma(max(df2$real_savings),digits =0)," out of $",comma(max_savings,digits=0)),
+  ax=30, ay=70
+)
 
 # updatemenus component
 updatemenus <- list(
@@ -127,20 +168,40 @@ updatemenus <- list(
     active = -1,
     type= 'buttons',
     buttons = list(
-      list(
+       list(
         label = "Real",
         method = "update",
         args = list(list(visible = c(FALSE, TRUE)),
-                    list(title = "Real savings"))),
+                    list(title = "Real savings",
+                         annotations = list(c(), real_annotations,game_over,mature_age)))),
+      # list(
+      #   label = "Real",
+      #   method = "update",
+      #   args = list(list(visible = c(FALSE, TRUE)),
+      #               list(title = "Real savings") )),
                          #,
                          #annotations = list(c(), high_annotations)))),
+      # list(
+      #   label = "Theorical",
+      #   method = "update",
+      #   args = list(list(visible = c(TRUE, FALSE)),
+      #               list(title = "Theorical savings")))
+                         #,
+                         #annotations = list(low_annotations, c() ))))
       list(
         label = "Theorical",
         method = "update",
         args = list(list(visible = c(TRUE, FALSE)),
-                    list(title = "Theorical savings")))
-                         #,
-                         #annotations = list(low_annotations, c() ))))
+                    list(title = "Theorical savings",
+                         annotations = list(theorical_annotations, c() ))))
+      
+      ,
+      list(
+        label = "Reset",
+        method = "update",
+        args = list(list(visible = c(TRUE, TRUE)),
+                    list(title = "Combined view",
+                         annotations = list(c(), c()))))
    
   )
 ))
