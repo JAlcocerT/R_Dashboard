@@ -1,5 +1,6 @@
 ---
-title: "Flex Dashboard Example"
+title: "Flex Dashboards"
+author: JAT
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
@@ -10,7 +11,7 @@ output:
 library(flexdashboard)
 ```
 
-Column {data-width=650}
+Column {data-width=500}
 -----------------------------------------------------------------------
 
 ### US unemployment
@@ -55,9 +56,16 @@ fig <- fig %>% layout(
   )
 
 fig
+
+#Column {data-width=800}
+#-----------------------------------------------------------------------
+
 ```
 
-Column {data-width=650}
+
+
+
+Column {.tabset data-width=400}
 -----------------------------------------------------------------------
 
 ### Retirement facts test
@@ -221,4 +229,28 @@ fig <- fig %>% layout(title = "Savings", showlegend=FALSE,
 fig
 
 
+```
+
+### Chart C
+
+```{r}
+# volcano is a numeric matrix that ships with R
+fig <- plot_ly(z = ~volcano) %>% add_surface(
+  contours = list(
+    z = list(
+      show=TRUE,
+      usecolormap=TRUE,
+      highlightcolor="#ff0000",
+      project=list(z=TRUE)
+      )
+    )
+  )
+fig <- fig %>% layout(
+    scene = list(
+      camera=list(
+        eye = list(x=1.87, y=0.88, z=-0.64)
+        )
+      )
+  )
+fig
 ```
