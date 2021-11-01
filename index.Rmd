@@ -5,6 +5,7 @@ output:
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
+    source_code: embed
 ---
 
 ```{r setup, include=FALSE}
@@ -166,7 +167,7 @@ theorical_annotations <- list(
   x=df2$age[df2$real_savings == max(df2$real_savings)], 
   y=max(df2$real_savings),
   xref='x', yref='y',
-  text=paste0('Got: $',comma(max(df2$real_savings),digits =0)," out of $",comma(max_savings,digits=0)),
+  text=paste0(comma(100*max(df2$real_savings)/max_savings,digits=2),'% of theorical max'),
   ax=30, ay=70
 )
 
