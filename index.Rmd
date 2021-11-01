@@ -100,6 +100,7 @@ Column {data-width=350}
 
 
 ```{r}
+
 library(plotly)
 
 max_age=100
@@ -149,20 +150,6 @@ for (i in 1:length(age)){
 
 df <- data.frame(age, in_flow,in_flow_theorical,out_flow,real_savings,theorical_savings)
 
-
-###Plot theorical
- plot(df$age, df$theorical_savings, type = "b", pch = 19, 
-     col = "red", xlab = "x", ylab = "y")
-###
- 
- ###Plot real
- plot(df$age[1:which(real_savings < 0)[1]], real_savings[1:which(real_savings < 0)[1]], type = "b", frame = FALSE, pch = 19, 
-     col = "red", xlab = "years", ylab = "real_savings")
-# Add a second line
-lines(df$age[1:which(real_savings < 0)[1]], theorical_savings[1:which(real_savings < 0)[1]], pch = 18, col = "blue", type = "b", lty = 2)
-###
-
- #return(df$real_savings[when])
 return(df)
 }
 
@@ -213,26 +200,26 @@ fig
 
 ### Chart C
 
-```{r}
-# volcano is a numeric matrix that ships with R
-fig <- plot_ly(z = ~volcano) %>% add_surface(
-  contours = list(
-    z = list(
-      show=TRUE,
-      usecolormap=TRUE,
-      highlightcolor="#ff0000",
-      project=list(z=TRUE)
-      )
-    )
-  )
-fig <- fig %>% layout(
-    scene = list(
-      camera=list(
-        eye = list(x=1.87, y=0.88, z=-0.64)
-        )
-      )
-  )
-
-fig
+# ```{r}
+# # volcano is a numeric matrix that ships with R
+# fig <- plot_ly(z = ~volcano) %>% add_surface(
+#   contours = list(
+#     z = list(
+#       show=TRUE,
+#       usecolormap=TRUE,
+#       highlightcolor="#ff0000",
+#       project=list(z=TRUE)
+#       )
+#     )
+#   )
+# fig <- fig %>% layout(
+#     scene = list(
+#       camera=list(
+#         eye = list(x=1.87, y=0.88, z=-0.64)
+#         )
+#       )
+#   )
+# 
+# fig
 ```
 
