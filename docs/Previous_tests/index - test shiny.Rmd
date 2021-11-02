@@ -1,0 +1,33 @@
+---
+title: "Aplicación flexdashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+runtime: shiny
+---
+
+```{r global, include=FALSE}
+x<-rnorm(1000)
+```
+
+Row 
+-------------------------------------
+    
+### Selección del número de intervalos
+
+```{r}
+sliderInput("bins", "Número de intervalos", 
+             min = 1, max = 100, value = 30,width = "90%")
+
+```  
+
+Row 
+-------------------------------------
+
+### Histograma
+
+```{r}
+renderPlot({
+  hist(x, breaks = input$bins)
+})
+```

@@ -272,7 +272,7 @@ TEST
 x<-rnorm(1000)
 ```
 
-Column 
+Row 
 -------------------------------------
     
 ### Selección del número de intervalos
@@ -283,7 +283,7 @@ sliderInput("bins", "Número de intervalos",
 
 ```  
 
-Column 
+Row 
 -------------------------------------
 
 ### Histograma

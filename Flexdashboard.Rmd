@@ -29,6 +29,11 @@ output: html_document
 
 
 ```{r}
+
+#install.packages("flexdashboard", type = "source")
+
+#install.packages("rmarkdown", type = "source")
+
 #Remember to have on the same folder the file: _site.yml
 
 # render the entire site
@@ -39,4 +44,10 @@ setwd(wd)
 
 # render a single file only
 rmarkdown::render_site("index.Rmd")
+
+rmarkdown::run("index.Rmd", shiny_args = list(port = 3838, host = "0.0.0.0"))
+#Then you reach the dashboard in your webbrowser via 
+#http://localhost:3838 
+#or any other host and port you defined via shiny_args.
+
 ```
