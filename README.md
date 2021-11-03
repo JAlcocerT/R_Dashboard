@@ -4,6 +4,8 @@ test WIP
 
 By executing Flexdashboard.Rmd, the content on the file Index.Rmd and _site.yml are rendered into docs.
 
+* Plotly
+* Shiny
 
 
 For Shiny apps to be active, we need some computer running them, we have several options:
