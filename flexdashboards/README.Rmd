@@ -19,4 +19,5 @@ author: JAT
 output: 
   flexdashboard::flex_dashboard:
     orientation: column
+    verical_layout: scroll
 ---
