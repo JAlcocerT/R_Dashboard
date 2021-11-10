@@ -21,3 +21,6 @@ output:
     orientation: column
     verical_layout: scroll
 ---
+
+
+Also dropdown menus,pages tabsets columns vs rows
