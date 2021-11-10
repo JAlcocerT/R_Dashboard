@@ -4,15 +4,17 @@ This can be as simple as adding a few lines of R Markdown to your existing code,
 
 
 Remember the importance of Rmd headers:
-
+```
 ---
 title: "Flex Dashboards"
 output: 
   flexdashboard::flex_dashboard
 ---
+```
 
 By default all charts are appearing in a single column, but it can be customized
 
+```
 ---
 title: "Flex Dashboards"
 author: JAT
@@ -21,7 +23,7 @@ output:
     orientation: column
     verical_layout: scroll
 ---
-
+```
 
 Also dropdown menus,pages tabsets columns vs rows.
 
