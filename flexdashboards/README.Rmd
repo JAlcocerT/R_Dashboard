@@ -23,4 +23,19 @@ output:
 ---
 
 
-Also dropdown menus,pages tabsets columns vs rows
+Also dropdown menus,pages tabsets columns vs rows.
+
+R default graphs can be included
+but more web friendly options:
+* plotly 
+
+```{r}
+library(plotly)
+ggplotly(my_gg_plot_code)
+```
+
+
+highcharter
+dygraphs
+rbokeh
+ggvis
