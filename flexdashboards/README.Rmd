@@ -26,7 +26,7 @@ output:
 Also dropdown menus,pages tabsets columns vs rows.
 
 R default graphs can be included
-but more web friendly options:
+but more web friendly options are:
 * plotly 
 
 ```{r}
@@ -35,7 +35,7 @@ ggplotly(my_gg_plot_code)
 ```
 
 
-highcharter
-dygraphs
-rbokeh
-ggvis
+* highcharter
+* dygraphs
+* rbokeh
+* ggvis
