@@ -1,4 +1,6 @@
-Dashboards are a popular way to present data in a cohesive visual display. In this course you'll learn how to assemble your results into a polished dashboard using the flexdashboard package. This can be as simple as adding a few lines of R Markdown to your existing code, or as rich as a fully interactive Shiny-powered experience
+Dashboards are a popular way to present data in a cohesive visual display.
+How to assemble your results into a polished dashboard using the flexdashboard package.
+This can be as simple as adding a few lines of R Markdown to your existing code, or as rich as a fully interactive Shiny-powered experience
 
 
 '''{r}
