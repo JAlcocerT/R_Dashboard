@@ -97,3 +97,21 @@ it needs storyboard: true in the flexdashboard's header
 comments are done here with ***
 
 Story board can be included in some selected pages only, just avoid the true in the header and include {.storyboard} next to the page's name
+
+
+### Shiny in flexdashboards (not a shiny app)
+
+It provides extra interactivity, as well as complexity and hosting (or local run) is required
+remember that after adding shiny to the flexdashboard, the html output its not enough to see the created web
+
+we need in the header: runtime: shiny
+
+
+user inputs are collected using shiny widgets, the same that we would use in a normal shiny app
+but here the widget dont need to appear within a page layout or UI section,
+here the inputs goes in a normal r chunk that goes in a flexdashboard column like any other flexdash component
+
+reactive df are not df objects, its aw function that returns the df specified by the code
+
+in every output that now rellies on the dynamic output of the df, we need to include the
+appropiate render output function, like renderLeaflet({)}
