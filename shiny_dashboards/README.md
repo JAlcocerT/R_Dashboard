@@ -45,6 +45,61 @@ shinyApp(ui, server)
 ```
 
 
+### Dynamic dashboards
+
+
+```{r reactive expression refresher}
+
+## Inputs
+
+# action buttons
+
+# checkbox input
+
+# date input
+
+# numeric input
+
+# radio buttons
+
+# select input
+
+# slider input
+
+# text input
+
+## Render functions: each render function normally has a corresponding output function.
+
+#The output function lives in the UI
+
+#render print
+
+server <- function(input, output){
+  
+  output$printed_object <- renderPrint({
+    "print me"
+  })
+}
+
+# render text
+
+# render table
+
+# render datatable
+
+# render plot
+
+# render image
+
+# render UI: html or a shiny tag object
+
+```
+
+
+
+
+
+
 (My examples)[https://github.com/reisikei/R/tree/main/Dashboards/Shiny_dashboards]
 
 
