@@ -1,8 +1,8 @@
 ## Flexdashboards
 
-<https://rmarkdown.rstudio.com/lesson-12.html>
-<https://pkgs.rstudio.com/flexdashboard/articles/examples.html>
-<https://www.htmlwidgets.org/>
+* <https://rmarkdown.rstudio.com/lesson-12.html>
+* <https://pkgs.rstudio.com/flexdashboard/articles/examples.html>
+* <https://www.htmlwidgets.org/>
 
 Dashboards are a popular way to present data in a cohesive visual display.
 How to assemble your results into a polished dashboard using the R flexdashboard package.
@@ -121,3 +121,5 @@ reactive df are not df objects, its aw function that returns the df specified by
 
 in every output that now rellies on the dynamic output of the df, we need to include the
 appropiate render output function, like renderLeaflet({)}
+
+(My examples)[https://github.com/reisikei/R/tree/main/Dashboards/Flexdashboards/Examples]
