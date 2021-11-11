@@ -48,9 +48,9 @@ ggplotly(my_gg_plot_code)
 * rbokeh
 * ggvis
 
-##### [html widgets](https://www.htmlwidgets.org/)
+##### html widgets
 
-html widgets are based on a framework that connects
+[html widgets](https://www.htmlwidgets.org/) are based on a framework that connects
 R with js.
 
 each html widget requires some learning (plotly is one of them)
