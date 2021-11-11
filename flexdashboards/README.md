@@ -122,4 +122,4 @@ reactive df are not df objects, its aw function that returns the df specified by
 in every output that now rellies on the dynamic output of the df, we need to include the
 appropiate render output function, like renderLeaflet({)}
 
-(My examples)[https://github.com/reisikei/R/tree/main/Dashboards/Flexdashboards/Examples]
+[My examples](https://github.com/reisikei/R/tree/main/Dashboards/Flexdashboards/Examples)
