@@ -1,3 +1,9 @@
+## Flexdashboards
+
+<https://rmarkdown.rstudio.com/lesson-12.html>
+<https://pkgs.rstudio.com/flexdashboard/articles/examples.html>
+<https://www.htmlwidgets.org/>
+
 Dashboards are a popular way to present data in a cohesive visual display.
 How to assemble your results into a polished dashboard using the R flexdashboard package.
 This can be as simple as adding a few lines of R Markdown to your existing code, or as rich as a fully interactive Shiny-powered experience
