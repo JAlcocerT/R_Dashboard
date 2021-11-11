@@ -35,7 +35,7 @@ Also dropdown menus,pages tabsets columns vs rows are possible to be customized 
 R default graphs can be included
 but more web friendly options are:
 
-* plotly 
+* [Plotly](https://plotly.com/r/)
 
 ```{r}
 library(plotly)
@@ -55,8 +55,8 @@ R with js.
 
 each html widget requires some learning:
 
-* [plotly](https://plotly.com/r/) is one of them
-* [leaflet](http://rstudio.github.io/leaflet/) is another, useful for map representations with lat and log + map
+* Plotly is one of them
+* [Leaflet](http://rstudio.github.io/leaflet/) is another, useful for map representations with lat and log + map
 
 ```{r interactive map with markers example}
 library(leaflet)
