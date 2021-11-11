@@ -65,3 +65,20 @@ leaflet() %>%
 addTiles() %>%
 addMarkers(lng = data_df$longitude, lat = data_df$latitude)
 ```
+
+
+### Tables
+
+* Basic tables
+
+```
+library(knitr)
+kable(my_data_df)
+```
+
+* Web-friendly alternative - The htmlwidget package DT:
+
+```
+library(DT)
+datatable(my_data_df)
+```
