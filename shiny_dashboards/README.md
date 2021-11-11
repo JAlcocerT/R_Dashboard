@@ -45,6 +45,6 @@ shinyApp(ui, server)
 ```
 
 
-{My examples)[https://github.com/reisikei/R/tree/main/Dashboards/Shiny_dashboards]
+(My examples)[https://github.com/reisikei/R/tree/main/Dashboards/Shiny_dashboards]
 
 
