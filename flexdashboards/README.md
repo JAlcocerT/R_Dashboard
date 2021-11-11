@@ -2,6 +2,7 @@ Dashboards are a popular way to present data in a cohesive visual display.
 How to assemble your results into a polished dashboard using the R flexdashboard package.
 This can be as simple as adding a few lines of R Markdown to your existing code, or as rich as a fully interactive Shiny-powered experience
 
+### Layout
 
 Remember the importance of Rmd headers:
 ```
@@ -25,10 +26,15 @@ output:
 ---
 ```
 
-Also dropdown menus,pages tabsets columns vs rows.
+
+Also dropdown menus,pages tabsets columns vs rows are possible to be customized in the code.
+
+
+### Plots
 
 R default graphs can be included
 but more web friendly options are:
+
 * plotly 
 
 ```{r}
@@ -41,3 +47,21 @@ ggplotly(my_gg_plot_code)
 * dygraphs
 * rbokeh
 * ggvis
+
+##### html widgets
+
+html widgets are based on a framework that connects
+R with js.
+
+each html widget requires some learning (plotly is one of them)
+
+leaflet is another, useful for map representations
+with lat and log + map
+
+```{r interactive map with markers example}
+library(leaflet)
+
+leaflet() %>%
+addTiles() %>%
+addMarkers(lng = data_df$longitude, lat = data_df$latitude)
+```
