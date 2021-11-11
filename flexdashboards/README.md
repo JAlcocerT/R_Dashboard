@@ -53,10 +53,10 @@ ggplotly(my_gg_plot_code)
 [html widgets](https://www.htmlwidgets.org/) are based on a framework that connects
 R with js.
 
-each html widget requires some learning (plotly is one of them)
+each html widget requires some learning:
 
-leaflet is another, useful for map representations
-with lat and log + map
+* [plotly](https://plotly.com/r/) is one of them
+* [leaflet](http://rstudio.github.io/leaflet/) is another, useful for map representations with lat and log + map
 
 ```{r interactive map with markers example}
 library(leaflet)
