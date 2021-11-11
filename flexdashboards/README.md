@@ -82,3 +82,18 @@ kable(my_data_df)
 library(DT)
 datatable(my_data_df)
 ```
+
+The [DT package](https://rstudio.github.io/DT/) allows a lot of customization, like buttons for the user to export the data.
+
+### Text
+
+#### Captions or notes 
+
+appear in the bottom of the selected chart
+
+#### Storyboards
+
+it needs storyboard: true in the flexdashboard's header
+comments are done here with ***
+
+Story board can be included in some selected pages only, just avoid the true in the header and include {.storyboard} next to the page's name
