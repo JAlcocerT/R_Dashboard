@@ -285,6 +285,54 @@ shinyApp(ui, server)
 
 * Icons: fa --> font awsome <https://fontawesome.com/v5.15/icons?d=gallery&p=2> <https://fontawesome.com/v4.7/examples/> <https://getbootstrap.com/docs/3.3/components/>
 
+```{r layout icons}
+
+library("shiny") 
+
+header <- dashboardHeader(
+  dropdownMenu(
+    type = "notifications",
+    notificationItem(
+      text = "The International Space Station is overhead!",
+      icon = icon("rocket")
+    )
+  )
+)
+ui <- dashboardPage(header = header,
+                    sidebar = dashboardSidebar(),
+                    body = dashboardBody()
+                    )
+shinyApp(ui, server)
+
+
+```
+
+* Statuses: ?validStatuses
+
+* Colors: ?validColors
+
+```{r layout icons}
+
+library("shiny") 
+
+header <- dashboardHeader(
+  dropdownMenu(
+    type = "notifications",
+    notificationItem(
+      text = "The International Space Station is overhead!",
+      icon = icon("rocket")
+    )
+  )
+)
+ui <- dashboardPage(header = header,
+                    sidebar = dashboardSidebar(),
+                    body = dashboardBody()
+                    )
+shinyApp(ui, server)
+
+
+```
+
 [My examples](https://github.com/reisikei/R/tree/main/Dashboards/Shiny_dashboards)
 
 
