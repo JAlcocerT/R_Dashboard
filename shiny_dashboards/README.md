@@ -344,6 +344,8 @@ Remember about <https://www.htmlwidgets.org/>, like the leaftlet package (for in
 
 More examples <https://rstudio.github.io/shinydashboard/>
 
+<https://www.rstudio.com/resources/webinars/introduction-to-shiny/>
+
 [My examples](https://github.com/reisikei/R/tree/main/Dashboards/Shiny_dashboards)
 
 
