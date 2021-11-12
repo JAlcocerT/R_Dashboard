@@ -97,6 +97,23 @@ server <- function(input, output){
 
 
 
+Remember that the code outside the server function will be loaded only once.
+The code inside the server function runs every time a new user enters the app.
+The code inside the server and inside reactive function, runs with every time the user changes the inputs.
+
+For extra optimization, look in: <https://www.rstudio.com/resources/videos/profiling-and-performance/>
+
+
+### CUstomizing style
+
+
+Shiny uses the boostrap grid layout system.
+
+* Row based layout
+* Column based layout
+* Mixed layout
+
+
 
 
 
