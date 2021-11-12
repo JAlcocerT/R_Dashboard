@@ -104,8 +104,9 @@ The code inside the server and inside reactive function, runs with every time th
 For extra optimization, look in: <https://www.rstudio.com/resources/videos/profiling-and-performance/>
 
 
-### CUstomizing style
+### Customizing style
 
+#### Layouts
 
 Shiny uses the boostrap grid layout system.
 
@@ -142,7 +143,7 @@ shinyApp(ui, server)
 
 ```
 
-#### Layouts
+
 
 * Column based layout
 
@@ -227,7 +228,7 @@ shinyApp(ui, server)
 
 #### Adding CSS
 
-
+CSS can be added on the same code is by saving a my_style.CSS in the same folder as the shiny dashboard (tag$link) or doing it in line in the code (tag$style)
 
 
 [My examples](https://github.com/reisikei/R/tree/main/Dashboards/Shiny_dashboards)
