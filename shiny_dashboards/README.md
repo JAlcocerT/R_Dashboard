@@ -146,6 +146,7 @@ shinyApp(ui, server)
 
 * Column based layout
 
+```{r}
 library(shinydashboard)
 library("shiny")
 
@@ -175,7 +176,7 @@ ui <- dashboardPage(header = dashboardHeader(),
                     body = body
                     )
 shinyApp(ui, server)
-
+```
 
 
 * Mixed layout
