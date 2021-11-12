@@ -231,6 +231,56 @@ shinyApp(ui, server)
 CSS can be added on the same code is by saving a my_style.CSS in the same folder as the shiny dashboard (tag$link) or doing it in line in the code (tag$style)
 
 
+```{r layout css 2}
+
+library("shiny")
+
+body <- dashboardBody(
+# Update the CSS
+  tags$head(
+        tags$style(
+            HTML('
+            \\Add CSS here
+            h3 {
+            font-weight: bold;
+            }
+            ')
+        )
+    ),
+  fluidRow(
+    box(
+      width = 12,
+      title = "Regular Box, Row 1",
+      "Star Wars, nothing but Star Wars"
+    )
+  ),
+  fluidRow(
+    column(width = 6,
+      infoBox(
+        width = NULL,
+        title = "Regular Box, Row 2, Column 1",
+        subtitle = "Gimme those Star Wars"
+    )
+   ),
+    column(width = 6,
+      infoBox(
+        width = NULL,
+        title = "Regular Box, Row 2, Column 2",
+        subtitle = "Don't let them end"
+    )
+  )
+ )
+)
+
+ui <- dashboardPage(
+  skin = "purple",
+  header = dashboardHeader(),
+  sidebar = dashboardSidebar(),
+  body = body)
+shinyApp(ui, server)
+
+```
+
 [My examples](https://github.com/reisikei/R/tree/main/Dashboards/Shiny_dashboards)
 
 
