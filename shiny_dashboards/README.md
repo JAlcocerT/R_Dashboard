@@ -110,6 +110,38 @@ For extra optimization, look in: <https://www.rstudio.com/resources/videos/profi
 Shiny uses the boostrap grid layout system.
 
 * Row based layout
+
+```{r layout}
+library(shinydashboard)
+#install.packages("shiny")
+library("shiny")
+
+body <- dashboardBody(
+  fluidRow(
+# Row 1
+  box(
+    width = 12,
+    title = "Regular Box, Row 1",
+    "Star Wars"
+    )),
+# Row 2
+    fluidRow(box(
+    width = 12,
+    title = "Regular Box, Row 2",
+    "Nothing but Star Wars"
+    )
+          )
+)
+
+ui <- dashboardPage(header = dashboardHeader(),
+                    sidebar = dashboardSidebar(),
+                    body = body
+                    )
+shinyApp(ui, server)
+
+
+```
+
 * Column based layout
 * Mixed layout
 
