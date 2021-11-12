@@ -142,9 +142,89 @@ shinyApp(ui, server)
 
 ```
 
+#### Layouts
+
 * Column based layout
+
+library(shinydashboard)
+library("shiny")
+
+body <- dashboardBody(
+  fluidRow(
+# Column 1
+    column(width = 6,
+      infoBox(
+        width = NULL,
+        title = "Regular Box, Column 1",
+        subtitle = "Gimme those Star Wars"
+      )
+    ),
+# Column 2
+    column(width = 6,
+      infoBox(
+        width = NULL,
+        title = "Regular Box, Column 2",
+        subtitle = "Don't let them end"
+      )
+    )
+  )
+)
+
+ui <- dashboardPage(header = dashboardHeader(),
+                    sidebar = dashboardSidebar(),
+                    body = body
+                    )
+shinyApp(ui, server)
+
+
+
 * Mixed layout
 
+```{r layout 3 mixed}
+
+library(shinydashboard)
+library("shiny")
+
+body <- dashboardBody(
+  fluidRow(
+# Row 1
+  box(
+    width = 12,
+    title = "Regular Box, Row 1",
+    "Star Wars, nothing but Star Wars"
+    )
+  ),
+  fluidRow(
+# Column 1
+    column(width = 6,
+        infoBox(
+        width = NULL,
+        title = "Regular Box, Row 2, Column 1",
+        subtitle = "Gimme those Star Wars"
+        )
+    ),
+# Column 2
+    column(width = 6,
+      infoBox(
+          width = NULL,
+          title = "Regular Box, Row 2, Column 2",
+          subtitle = "Don't let them end"
+          )
+    )
+  )
+)
+
+ui <- dashboardPage(header = dashboardHeader(),
+                    sidebar = dashboardSidebar(),
+                    body = body
+                    )
+shinyApp(ui, server)
+
+
+
+```
+
+#### Adding CSS
 
 
 
