@@ -281,6 +281,10 @@ shinyApp(ui, server)
 
 ```
 
+#### Icons, statuses and colors
+
+* Icons: fa --> font awsome <https://fontawesome.com/v5.15/icons?d=gallery&p=2> <https://fontawesome.com/v4.7/examples/> <https://getbootstrap.com/docs/3.3/components/>
+
 [My examples](https://github.com/reisikei/R/tree/main/Dashboards/Shiny_dashboards)
 
 
