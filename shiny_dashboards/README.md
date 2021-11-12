@@ -340,7 +340,9 @@ For the dynamic content, there are 2 important functions:
 * render*() function that lives in the server part
 * *Output() function that lives in the UI part
 
-Remember about <https://www.htmlwidgets.org/>, like the leaftlet package (for interactive maps)
+Remember about <https://www.htmlwidgets.org/>, like the leaftlet package (for interactive maps) <https://rstudio.github.io/leaflet/shiny.html>
+
+More examples <https://rstudio.github.io/shinydashboard/>
 
 [My examples](https://github.com/reisikei/R/tree/main/Dashboards/Shiny_dashboards)
 
