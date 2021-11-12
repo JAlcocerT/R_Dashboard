@@ -333,6 +333,15 @@ shinyApp(ui, server)
 
 ```
 
+### Reminder
+
+For the dynamic content, there are 2 important functions:
+
+* render*() function that lives in the server part
+* *Output() function that lives in the UI part
+
+Remember about <https://www.htmlwidgets.org/>, like the leaftlet package (for interactive maps)
+
 [My examples](https://github.com/reisikei/R/tree/main/Dashboards/Shiny_dashboards)
 
 
