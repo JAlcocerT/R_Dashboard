@@ -82,7 +82,7 @@ Non-shiny outputs and render functions: there are packages outside shiny that pr
 
 ```{r reactive expression refresher}
 
-## Inputs
+## Inputs functions
 
 # action buttons
 # checkbox input
@@ -113,6 +113,10 @@ server <- function(input, output){
 # render image
 # render UI: html or a shiny tag object
 
+
+## Render functions
+
+# tableOutput
 ```
 
 
