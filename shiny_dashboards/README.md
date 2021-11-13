@@ -15,7 +15,7 @@ More examples <https://rstudio.github.io/shinydashboard/>
 library(flexdashboard)
 library("shinydashboard")
 library("shiny")
-library("leaflet")
+library("leaflet") #if needed
 ```
 
 [My examples](https://github.com/reisikei/R/tree/main/Dashboards/Shiny_dashboards)
