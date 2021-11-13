@@ -78,7 +78,13 @@ There are manu **render functions** that works on the server section of the app.
 
 **Output functions**, works on the UI of the app and are based on the render function.
 
-Non-shiny outputs and render functions: there are packages outside shiny that provides ways to have interactivity, thanks to htmlwidgets, packages like: DT, leaflet and plotly allows to build interactive datatables, maps and plots as shiny outputs
+Non-shiny outputs and render functions: there are packages outside shiny that provides ways to have interactivity, thanks for example, to htmlwidgets packages like DT (datatables), leaflet (maps), plotly (interactive plots), etc. that provide highly interactive outputs and can be easily integrated into Shiny apps using almost the same pattern. For example, you can turn a static table in a Shiny app into an interactive table using the DT package:
+
+```
+Create an interactive table using DT::datatable().
+Render it using DT::renderDT().
+Display it using DT::DTOutput().
+```
 
 ```{r reactive expression refresher}
 
