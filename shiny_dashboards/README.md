@@ -1,4 +1,4 @@
-### Reminder
+### Intro / Reminder
 
 For the dynamic content, there are 2 important functions:
 
