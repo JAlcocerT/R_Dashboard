@@ -1,5 +1,7 @@
 ### Intro / Reminder
 
+Shiny is an R package that makes it easy to build highly interactive web apps directly in R. Using Shiny, data scientists can create interactive web apps that allow your team to dive in and explore your data as dashboards or visualizations.
+
 For the dynamic content, there are 2 important functions:
 
 * render*() function that lives in the server part
