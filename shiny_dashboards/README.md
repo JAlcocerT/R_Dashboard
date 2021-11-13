@@ -145,6 +145,8 @@ For extra optimization, look in: <https://www.rstudio.com/resources/videos/profi
 
 #### Layouts
 
+Layout functions allow inputs and outputs to be visually arranged in the UI. A well-chosen layout makes a Shiny app aesthetically more appealing, and also improves the user experience.
+
 Shiny uses the boostrap grid layout system.
 
 * Row based layout
