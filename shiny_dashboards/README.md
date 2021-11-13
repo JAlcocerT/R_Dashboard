@@ -147,7 +147,16 @@ For extra optimization, look in: <https://www.rstudio.com/resources/videos/profi
 
 Layout functions allow inputs and outputs to be visually arranged in the UI. A well-chosen layout makes a Shiny app aesthetically more appealing, and also improves the user experience.
 
-Shiny uses the [boostrap](https://getbootstrap.com/docs/3.4/) grid layout system.
+Shiny uses the [boostrap](https://getbootstrap.com/docs/3.4/) grid layout system. Check some free and open source themes on <https://bootswatch.com/>
+
+'''
+#to select one by the name:
+theme = shinythemes::shinytheme("<your theme>")
+#to try them out:
+ shinythemes::themeSelector()
+        
+ #in the UI
+```
 
 * Row based layout
 
