@@ -117,6 +117,7 @@ server <- function(input, output){
 ## Render functions
 
 # tableOutput
+# plotOutput
 ```
 
 
