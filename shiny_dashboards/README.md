@@ -72,6 +72,7 @@ shinyApp(ui, server)
 
 ### Dynamic dashboards
 
+Inputs functions are built on the UI section of the dashboard, their ids must be unique and each of them has different needs (check it with ?checkBoxInput, for example)
 
 ```{r reactive expression refresher}
 
