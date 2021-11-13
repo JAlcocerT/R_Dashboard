@@ -72,26 +72,25 @@ shinyApp(ui, server)
 
 ### Dynamic dashboards
 
-Inputs functions are built on the UI section of the dashboard, their ids must be unique and each of them has different needs (check it with ?checkBoxInput, for example)
+**Inputs functions** are built on the UI section of the dashboard, their ids must be unique and each of them has different needs (check it with ?checkBoxInput, for example)
+
+There are manu **render functions** that works on the server section of the app.
+
+**Output functions**, works on the UI of the app and are based on the render function.
+
+Non-shiny outputs and render functions: there are packages outside shiny that provides ways to have interactivity, thanks to htmlwidgets, packages like: DT, leaflet and plotly allows to build interactive datatables, maps and plots as shiny outputs
 
 ```{r reactive expression refresher}
 
 ## Inputs
 
 # action buttons
-
 # checkbox input
-
 # date input
-
 # numeric input
-
 # radio buttons
-
 # select input
-
 # slider input
-
 # text input
 
 ## Render functions: each render function normally has a corresponding output function.
@@ -108,15 +107,10 @@ server <- function(input, output){
 }
 
 # render text
-
 # render table
-
 # render datatable
-
 # render plot
-
 # render image
-
 # render UI: html or a shiny tag object
 
 ```
