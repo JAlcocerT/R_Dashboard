@@ -1,6 +1,6 @@
 ### R Dashboards
 
-
+Data visualization is a key part on the discovery and sharing the insights of our investigations, this repository aims to give an overview of the typical packages used in R to build such apps, being some of them interactive.
 
 By executing Flexdashboard.Rmd, the content on the file Index.Rmd and _site.yml are rendered into docs.
 
