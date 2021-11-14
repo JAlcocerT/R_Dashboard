@@ -140,6 +140,48 @@ The code inside the server and inside reactive function, runs with every time th
 
 For extra optimization, look in: <https://www.rstudio.com/resources/videos/profiling-and-performance/>
 
+there are three types of reactive components in a Shiny app.
+
+* Reactive source: User input that comes through a browser interface, typically.
+* Reactive conductor: Reactive component between a source and an endpoint, typically used to encapsulate slow computations.
+* Reactive endpoint: Something that appears in the user's browser window, such as a plot or a table of values.
+
+```{r Example reactivity}
+
+ui <- fluidPage(
+  titlePanel('BMI Calculator'),
+  theme = shinythemes::shinytheme('cosmo'),
+  sidebarLayout(
+    sidebarPanel(
+      numericInput('height', 'Enter your height in meters', 1.5, 1, 2),
+      numericInput('weight', 'Enter your weight in Kilograms', 60, 45, 120)
+    ),
+    mainPanel(
+      textOutput("bmi"),
+      textOutput("bmi_range")
+    )
+  )
+)
+server <- function(input, output, session) {
+  rval_bmi <- reactive({
+    input$weight/(input$height^2)
+  })
+  output$bmi <- renderText({
+    bmi <- rval_bmi()
+    paste("Your BMI is", round(bmi, 1))
+  })
+  output$bmi_range <- renderText({
+    bmi <- rval_bmi()
+    health_status <- cut(bmi, 
+      breaks = c(0, 18.5, 24.9, 29.9, 40),
+      labels = c('underweight', 'healthy', 'overweight', 'obese')
+    )
+    paste("You are", health_status)
+  })
+}
+shinyApp(ui, server)
+
+```
 
 ### Customizing style
 
