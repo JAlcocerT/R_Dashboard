@@ -21,7 +21,7 @@ library("leaflet") #if needed
 ```
 
 ```{r shinywidgets example}
-shinyWidgetsGallery()
+shinyWidgetsGallery() #extra widgets
 ```
 
 [My examples](https://github.com/reisikei/R/tree/main/Dashboards/Shiny_dashboards)
