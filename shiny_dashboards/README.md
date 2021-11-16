@@ -20,6 +20,10 @@ library("shiny")
 library("leaflet") #if needed
 ```
 
+```{r shinywidgets example}
+shinyWidgetsGallery()
+```
+
 [My examples](https://github.com/reisikei/R/tree/main/Dashboards/Shiny_dashboards)
 
 
@@ -423,6 +427,30 @@ shinyApp(ui, server)
 
 ```
 
+
+        
+#### Extra functions        
+
+* The isolate() function allows an expression to read a reactive value without triggering re-execution when its value changes.
+
+* The eventReactive() function:
+There are situations where you want to delay the computation of a reactive expression until a specific event is triggered (Delaying actions). 
+The eventReactive() function will prove very handy in these scenarios.
+The function eventReactive() is used to compute a reactive value that only updates in response to a specific event.
+
+need function -> 2 arguments input condition + error message
+
+* The observeEvent():
+        
+ There are times when you want to perform an action in response to an event. For example, you might want to let the app user download a table as a CSV file, when they click on a "Download" button. Or, you might want to display a notification or modal dialog, in response to a click.
+        
+ The function allows you to achieve this. It accepts two arguments:
+
+The event you want to respond to.
+The function that should be called whenever the event occurs.
+
+Unlike event reactive, observeEvent is used only for it side effects and does not return any value
+   
 
 
 
