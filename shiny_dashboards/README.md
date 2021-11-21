@@ -514,3 +514,17 @@ Unlike event reactive, observeEvent is used only for it side effects and does no
   )
         
 ```
+
+        
+        #### Tables
+        
+        * Dynamic:
+        
+        ```
+        #ui:
+        output$table_top_10_names <- DT::renderDT(top_10_names())
+                                     
+        #server
+         DT::DTOutput("table_top_10_names")
+        
+        ```
