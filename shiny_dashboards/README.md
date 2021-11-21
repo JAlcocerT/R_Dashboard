@@ -474,5 +474,25 @@ Unlike event reactive, observeEvent is used only for it side effects and does no
           guides(color=guide_legend("Legend"))
         
                                               })
+        ```
 
-```
+         ```
+        #in the UI:
+       plotlyOutput("plot", height = "80%")
+        
+        #in the server:
+           output$plot <- renderPlotly({
+    
+       ggplotly(
+        ggplot() + geom_line(data = data_frame(), aes(Dates, real_SP500,colour="red"))+
+          geom_line(data = data_frame(), aes(Dates, SP500,colour="green"))+
+          labs(title="SP500 Real vs Nominal\n", x="Year", y="SP500 ($ value)") +
+          # xlab('Year') +
+          # ylab('SP500') +
+          scale_y_continuous(labels = dollar) +
+          scale_color_hue(labels = c("Nominal","Real @2020 $")) +
+          guides(color=guide_legend("Legend"))
+        )
+        
+                                              })
+        ```
