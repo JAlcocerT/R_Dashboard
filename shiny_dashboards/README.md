@@ -498,9 +498,19 @@ Unlike event reactive, observeEvent is used only for it side effects and does no
                                               })
         ```
         
+        Or directly with:
         
         ```
+        #UI
+         plotlyOutput('plot')
         
-        
+        #server
+          output$plot <- renderPlotly(
+    plot1 <- plot_ly(
+      x = x(),
+      y = y(), 
+      type = 'scatter',
+      mode = 'markers')
+  )
         
         ```
