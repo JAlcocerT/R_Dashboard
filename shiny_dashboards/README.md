@@ -475,8 +475,9 @@ Unlike event reactive, observeEvent is used only for it side effects and does no
         
                                               })
         ```
-
-         ```
+* Dynamic:
+                          
+        ```
         #in the UI:
        plotlyOutput("plot", height = "80%")
         
@@ -495,4 +496,11 @@ Unlike event reactive, observeEvent is used only for it side effects and does no
         )
         
                                               })
+        ```
+        
+        
+        ```
+        
+        
+        
         ```
