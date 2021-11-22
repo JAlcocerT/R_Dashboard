@@ -1,0 +1,29 @@
+---
+title: "Deployment"
+author: "JAT"
+date: "21/11/2021"
+output: html_document
+---
+
+```{r}
+
+#rsconnect::setAccountInfo(name="<ACCOUNT>", token="<TOKEN>", secret="<SECRET>")
+#install.packages(c('ggplot2', 'shiny'))
+
+
+#setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
+getwd()
+
+#TEST LOCALLY
+library(shiny)
+runApp()
+
+#DEPLOY
+library(rsconnect)
+deployApp()
+
+#terminateApp("<your app's name>")
+
+
+```
