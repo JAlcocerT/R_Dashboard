@@ -6,8 +6,8 @@ It can be beneficial the analyses into a web application, especially when intera
 
 By executing Flexdashboard.Rmd, the content on the file Index.Rmd and _site.yml are rendered into docs.
 
-* Plotly
-* Shiny 
+* Plotly (interactive)
+* Shiny (hosted, UI interactive)
   - <https://shiny.rstudio.com/tutorial/written-tutorial/lesson3/>
   - <https://rstudio.github.io/shiny/tutorial/>
   - My repo with examples <https://github.com/reisikei/R_Dashboard/tree/main/shiny_dashboards>
