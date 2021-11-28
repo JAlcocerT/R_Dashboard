@@ -26,6 +26,21 @@ shinyWidgetsGallery() #check extra widgets
 
 [My examples](https://github.com/reisikei/R/tree/main/Dashboards/Shiny_dashboards)
 
+### To test, simply use:
+
+```{r}
+
+shinyUI(navbarPage("App Title",
+  tabPanel("Tab Name",
+    sidebarPanel(),
+    mainPanel()
+  ),
+  tabPanel("Second tab name",
+    sidebarPanel(),
+    mainPanel()
+  )
+))
+```
 
 ### Static dashboards
 
