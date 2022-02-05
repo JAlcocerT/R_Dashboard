@@ -1,3 +1,9 @@
+A simple way to share data visualizations as dashboards, would be be using the library flexdashboards.
+
+The advantage of this one compared to shiny, is that we can host the site generated with Rmd to github pages, for example: <https://jalcocert.github.io/R_Dashboard/>
+
+
+
 ## Flexdashboards
 
 * <https://rmarkdown.rstudio.com/lesson-12.html>
@@ -107,10 +113,10 @@ Story board can be included in some selected pages only, just avoid the true in 
 
 ### Shiny in flexdashboards (not a shiny app)
 
-It provides extra interactivity, as well as complexity and hosting (or local run) is required
-remember that after adding shiny to the flexdashboard, the html output its not enough to see the created web
+It provides extra interactivity, as well as complexity and hosting (or local run) is required.
+Remember that after adding shiny to the flexdashboard, the html output its not enough to see the created web
 
-we need in the header: runtime: shiny
+We need in the header: runtime: shiny
 
 
 user inputs are collected using shiny widgets, the same that we would use in a normal shiny app
@@ -122,4 +128,4 @@ reactive df are not df objects, its aw function that returns the df specified by
 in every output that now rellies on the dynamic output of the df, we need to include the
 appropiate render output function, like renderLeaflet({)}
 
-[My examples](https://github.com/reisikei/R/tree/main/Dashboards/Flexdashboards/Examples)
+[My examples](https://github.com/jalcocert/R/tree/main/Dashboards/Flexdashboards/Examples)
