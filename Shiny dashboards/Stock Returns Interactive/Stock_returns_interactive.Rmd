@@ -1,0 +1,533 @@
+---
+title: "Stock_returns_interactive"
+author: "JAT"
+date: "24/3/2022"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r install packages}
+
+install.packages("cat")
+library("cat")
+
+cat("\014") # clear saved variables
+cat("\f");
+
+install.packages("BatchGetSymbols")
+install.packages("readxl")
+install.packages("ggplot2")
+install.packages("reshape2")
+install.packages("rstudioapi")
+install.packages("quantmod")
+install.packages("dplyr")
+install.packages("lubridate")
+
+#install.packages("na.tools")
+#library("na.tools")
+
+
+install.packages("shiny")
+install.packages("shinythemes")
+install.packages("shinyWidgets")
+install.packages("DT")
+
+
+install.packages("ggthemes")
+install.packages("plotly")
+
+cat("\f") # clear console
+
+```
+
+
+```{r libraries}
+
+library("BatchGetSymbols")
+library("readxl")
+library("ggplot2")
+library("reshape2")
+library("rstudioapi")
+library("quantmod")
+library("dplyr")
+library("lubridate")
+
+cat("\014")
+cat("\f")
+
+
+# For Shiny
+
+
+
+
+
+library(shiny)
+library(shinythemes)
+library(shinyWidgets)
+
+
+
+library(DT)
+
+library(ggthemes)
+library(plotly)
+
+require(dplyr)
+             library(dplyr)    
+library(plyr)
+
+
+# DIRECTORY:
+
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+getwd()
+
+```
+
+
+
+
+```{r read from excel}
+
+# set as direction the one of .Rmd archive; .xlsx and .Rmd mut be on same folder
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
+my_data <- read_excel("Bolsa.xlsx", sheet="Datos para R")
+
+# clear empty cells in my_data; overwrite it
+my_data <- na.omit(my_data)
+
+```
+
+##### 
+
+
+```{r gathering enterprises tickers  - good for interactive}
+
+min_year= 1970
+max_year = 2022
+            
+            
+              
+              cat("\f")
+              
+              # gather enterprises' tickers
+              
+              portfolio_tickers <- unique(my_data$Tickers)
+              
+              extra_tickers <- c("FRT","PEP")
+              tickers<-c(portfolio_tickers,extra_tickers)
+              
+              # set time interval for study:
+              
+              #tini=as.Date("2000-01-01")
+              tini=as.Date(paste(min_year,"-01-01",sep=""))
+              #tend=floor_date(Sys.Date(),"year")
+              tend=as.Date(paste(max_year,"-12-31",sep=""))
+              
+              yini=as.numeric(format(as.Date(tini, format="%Y/%m/%d"),"%Y"))
+              yend=as.numeric(format(as.Date(tend, format="%Y/%m/%d"),"%Y"))
+              yinterval=yend-yini
+              
+              # get data of the stock trend for all enterprises
+              result_aux<-BatchGetSymbols(tickers,
+                                      first.date=tini,
+                                      #first.date=input$years_analysis[1],
+                                      last.date=tend,
+                                      #last.date=input$years_analysis[2],
+                                      freq.data="daily")
+              
+              result<-as.data.frame(result_aux$df.tickers)
+              
+              rm(result_aux)
+              
+
+              
+```
+
+
+
+```{r get all dividends for sp500 - good for interactive}
+
+
+df_sp500 <- GetSP500Stocks()
+
+ #unique(df_sp500$GICS.Sector)
+ 
+  #unique(df_sp500$GICS.Sub.Industry)
+
+
+selected_sp500<-filter(df_sp500, GICS.Sector=="Real Estate") %>% select(Tickers)
+
+                     
+ tickers<-c(unique(my_data$Tickers),selected_sp500$Tickers)
+
+```
+
+
+
+
+```{r divivends from enterprises - good for interactive}
+
+# get dividends in a loop
+# total_div<-matrix(nrow=yinterval,ncol=(length(enterprises)+1))
+# colnames(total_div)<-c("Year",enterprises)
+
+
+#pre-define an empty DF
+df <- data.frame(year=numeric(),
+                 Div=numeric(), 
+                 Enterprise=character(), 
+                 stringsAsFactors=FALSE) 
+
+
+enterprises<-tickers
+
+
+
+for (k in 1:length(enterprises)) {
+   
+      a=getDividends(enterprises[k] )
+      #a=getDividends(enterprises[1] )
+      
+   
+      
+      if ( length(a)==0) { #it will skip the iteration if getdividends does not find any records
+          next
+      }
+      
+      
+      a <- data.frame(date=index(a), coredata(a))
+      colnames(a) <- c("Date","Div")
+      a$Enterprise <- replicate(nrow(a), enterprises[k])
+    
+    
+      #group by year
+      a["Year"]<-format(as.Date(a$Date, format="%d/%m/%Y"),"%Y")
+      a=aggregate(data=a,cbind(Div) ~ Year + Enterprise, FUN=sum)
+    
+    
+    
+    a <- head(a, -1)       
+    
+    
+    
+    
+     df <- rbind(df,a)
+
+}
+
+
+  
+  df["Year"]<- as.numeric(df$Year)
+
+ 
+  ggplot(data = df, aes(x = Year, y = Div, color = Enterprise))+ geom_line()
+  
+
+total_div=df
+
+```
+
+
+
+
+```{r dashboard interactive}
+
+
+
+
+#library(rstudio/shiny)
+
+## Only run this example in interactive R sessions
+if (interactive()) {
+  # table example
+  shinyApp(
+    
+    ui = fluidPage(
+      #theme = shinytheme("spacelab"),
+  
+  titlePanel("MVP - Release"),
+  
+    ### SIDE BAR PANEL
+  sidebarPanel(
+                tags$style(".well {background-color:#edf7ff;}"),
+              
+                            sliderInput("Input_USD", "USD/Monthly invested during the period",
+                            min = 0, max = 5000, value = 1000,width = "90%"),
+                
+                #https://shiny.rstudio.com/reference/shiny/1.6.0/selectInput.html
+                        #   selectInput("linear_log_growth", "Choose which stocks to display:", 
+                        #   list("All","Growth","Log")
+                        # ),
+                
+                
+                #dividends policy
+                
+                selectInput("check_div_policy", "Choose which dividend's policy check:", 
+                          #list("JNJ","PG")
+                          #c(as.character(names(total_div))[-1]) #ALL BUT THE FIRST ONE
+                          #list(enterprises)
+                           unique(total_div$Enterprise)
+                          
+                        ),
+                
+                      # slider range - https://shiny.rstudio.com/gallery/slider-bar-and-slider-range.html
+                            sliderInput("years_analysis", label = h3("Years"), min = min_year, 
+                              max = max_year, value = c(2000, 2020)),
+                        
+                            br(),
+                            sliderInput("expected_returns", "Expected future returns",
+                            min = 0, max = 20, value = 5,width = "90%"),
+                            sliderInput("expected_inflation", "Expected future inflation",
+                            min = 0, max = 30, value = 4,width = "90%"),
+                
+                            br(),
+                            br(),
+                          
+                            sliderInput("dividend_missed_opportunities", "Dividends - vista gorda",
+                            min = 0, max = 10, value = 1,width = "90%"),
+                
+                            sliderInput("dividend_missed_percentage", "Dividends - missed by X %", #when selected to 1, if there was not an increase in dividend value, its considered as a miss, if selected as 0,9, and few months the dividend would not increase/be at least 90% of its previous value, it would still passing our dividend test.
+                            min = 0, max = 1, value = 1,width = "90%"),
+                
+                                            
+                            br(),
+                            br(),
+                
+                            selectInput("sp500_sector", "Choose which SP500's sector to compare with:", 
+                            unique(df_sp500$GICS.Sector),
+                            # selectInput("sp500_company", "Choose which SP500's company:",
+                            # )
+                           
+                          
+                          
+                            ),
+                
+                            
+                            #checkboxInput("use_daily", label="Use daily compounding", value = FALSE, width = NULL),
+                          
+                
+                
+     
+             ),
+  
+  mainPanel(
+
+      fluidRow(
+                column(12,
+                
+                  br(),
+                  plotlyOutput("Graph_stock_trend"),
+                  plotlyOutput("Graph_dividends_policy"),
+                  
+                        textOutput("introtext_dividends"),
+                                          verbatimTextOutput("Div_years_missed"),
+                  
+                  plotlyOutput("Graph_onebuy_portoflio"),
+                  
+                  tableOutput('table_dividends_years'),
+                  tableOutput("table_sp500_selected"),
+                  
+
+                )
+              )
+            )
+    ),
+    
+    
+    
+    
+    server = function(input, output) {
+
+      
+    
+      ### Dataframes ###
+      
+     df_inter_results <- reactive({
+
+              return(
+                  filter(result,
+                         year(ref.date) >= input$years_analysis[1] &
+                           year(ref.date) <= input$years_analysis[2])
+                     )
+      
+                        })
+     
+     df_interactive_total_divs <- reactive({
+       
+       
+              df_c <- filter(total_div,
+                         Enterprise == input$check_div_policy &
+                         Year >= input$years_analysis[1] &
+                           Year <= input$years_analysis[2])
+       
+
+           # c<- total_div %>% filter(Enterprise == "MSFT" & 
+           #                            Year >= 2004 &
+           #                            Year <= 2020) %>% select(Div)
+           
+
+          # length( diff(c$Div))
+          #diff(c$Div)
+           
+          #diff(c$Div) < 0 #get the ones missed only (the <0 differences between 2 consecutives Yearly Dividends)
+
+              df_c$Colour <-  c("FALSE",diff(df_c$Div) < 0)
+              
+              df_c$Colour[df_c$Colour=="TRUE"] <- "Red"
+              df_c$Colour[df_c$Colour=="FALSE"] <- "Green"
+       
+       
+         return( df_c
+                 
+                     )
+       
+     })
+     
+     
+      df_inter_sp500 <- reactive({
+        
+                        
+                        
+                #df_sp500 <- GetSP500Stocks()
+                
+                 #unique(df_sp500$GICS.Sector)
+                 
+                  #unique(df_sp500$GICS.Sub.Industry)
+                
+                
+                selected_sp500<-filter(df_sp500, GICS.Sector==input$sp500_sector) %>% select(Tickers, Company)
+
+      
+                        })
+      
+      df_buy_n_hold_portfolio_value <- reactive ({
+        
+        
+        filtered_results <-filter(result,
+               ticker %in% portfolio_tickers)
+        
+        
+        #unique(filtered_results$ticker)
+        
+        #unique(result$ticker)
+        
+        
+        filtered_results <- filtered_results %>% 
+      left_join(my_data %>% select (Tickers, Amount), by = c('ticker' = 'Tickers')) #merging with the amount of stocks (one time buy)
+        
+        filtered_results$Value = filtered_results$price.close * filtered_results$Amount #the value of each stock in the portolio in a given date
+        
+        
+        Portfolio_df = aggregate(data=filtered_results,cbind(Value) ~ ref.date, FUN=sum)
+        
+      })
+
+
+      ### GRAPHS ###
+        
+      
+          output$Graph_dividends_policy<- renderPlotly({
+            
+            
+            
+                 ggplotly(
+                        ggplot(df_interactive_total_divs()
+                               , aes(x=Year, y=Div)) +
+                         geom_bar(stat = "identity", colour=df_interactive_total_divs()$Colour)
+                         #geom_bar(colour=df$col)
+                        + ylab(input$check_div_policy)
+                        
+                    ) 
+    
+    
+          })
+          
+        
+            output$Graph_stock_trend <-renderPlotly({
+               
+                  
+              #option 1#
+                       ggplotly(
+
+             
+                          ggplot(subset(df_inter_results(),ticker!="AMZN"),
+                                  aes(x=ref.date, y=price.close, group=ticker))
+                           + geom_line(aes(colour = ticker))
+                        )
+              
+             
+                                            }) 
+            
+            
+            
+              output$Graph_onebuy_portoflio<-renderPlotly({
+               
+                  
+              #option 1#
+                       ggplotly(
+
+             
+                          ggplot(df_buy_n_hold_portfolio_value(),aes(x=ref.date, y=Value)) + geom_line()
+                        )
+              
+             
+                                            }) 
+            
+            
+            ### TABLES ###
+          
+output$table_dividends_years <- renderTable({
+   
+  
+  df_interactive_total_divs() %>% select(Year,Div)
+  })
+
+
+output$table_sp500_selected <- renderTable({
+
+  
+  df_inter_sp500()
+  })
+
+
+### TEXT
+
+          
+        output$introtext_dividends <- renderText({ 
+    "The selected company have missed the dividend increase (Years):"
+                                        })          
+                    
+          output$Div_years_missed <- renderPrint({ 
+            
+            
+           
+           c<- total_div %>% filter(Enterprise == input$check_div_policy & 
+                                      Year >= input$years_analysis[1] &
+                                      Year <= input$years_analysis[2]) %>% select(Div)
+                    
+           
+           count(diff(c$Div) < 0)[2,2]#get the ones missed only (the <0 differences between 2 consecutives Yearly Dividends)
+           
+                                   })  
+          
+      
+
+         
+           
+          
+      
+                        } #server
+  ) #shinyapp
+  
+  
+} #if interactive
+
+
+
+
+
+```
