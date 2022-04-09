@@ -162,7 +162,8 @@ df_sp500 <- GetSP500Stocks()
 selected_sp500<-filter(df_sp500, GICS.Sector=="Real Estate") %>% select(Tickers)
 
                      
- tickers<-c(unique(my_data$Tickers),selected_sp500$Tickers)
+  #Select the ones in the portfolio + the ones included in the specified SP500 sector
+  #tickers<-c(unique(my_data$Tickers),selected_sp500$Tickers)
 
 ```
 
@@ -232,6 +233,85 @@ total_div=df
 ```
 
 
+
+```{r functions}
+
+
+
+### Get the dividends grouped by year and company of the given Tickers
+Tickers_to_Dividends <- function(enterprises) {
+
+
+#pre-define an empty DF
+df <- data.frame(year=numeric(),
+                 Div=numeric(), 
+                 Enterprise=character(), 
+                 stringsAsFactors=FALSE) 
+
+
+for (k in 1:length(enterprises)) {
+   
+      a=getDividends(enterprises[k] )
+      #a=getDividends(enterprises[1] )
+      
+   
+      
+      if ( length(a)==0) { #it will skip the iteration if getdividends does not find any records
+          next
+      }
+      
+      
+      a <- data.frame(date=index(a), coredata(a))
+      colnames(a) <- c("Date","Div")
+      a$Enterprise <- replicate(nrow(a), enterprises[k])
+    
+    
+      #group by year
+      a["Year"]<-format(as.Date(a$Date, format="%d/%m/%Y"),"%Y")
+      a=aggregate(data=a,cbind(Div) ~ Year + Enterprise, FUN=sum)
+    
+
+    a <- head(a, -1)       
+
+    
+     df <- rbind(df,a)
+
+}
+
+
+  
+  df["Year"]<- as.numeric(df$Year)
+
+ 
+  
+  
+  return(df)
+}
+
+
+
+#Get dividends of the selected tickers
+
+total_div=Tickers_to_Dividends(tickers)
+
+df["Year"]<- as.numeric(df$Year)
+
+ 
+  ggplot(data = total_div, aes(x = Year, y = Div, color = Enterprise))+ geom_line()
+
+#to agregate per year all the dividends of the companies of the selected sector of the SP500
+
+selected_sp500<-filter(df_sp500, GICS.Sector=="Industrials") %>% select(Tickers, Company)
+
+df77=Tickers_to_Dividends(selected_sp500$Tickers)
+  ggplot(data = df77, aes(x = Year, y = Div, color = Enterprise))+ geom_line()
+  
+  
+  df88 = aggregate(data=df77,cbind(Div) ~ Year, FUN=sum)
+  
+   ggplot(data = df88, aes(x = Year, y = Div))+ geom_line()
+
+```
 
 
 ```{r dashboard interactive}
@@ -327,9 +407,12 @@ if (interactive()) {
                                           verbatimTextOutput("Div_years_missed"),
                   
                   plotlyOutput("Graph_onebuy_portoflio"),
+                  plotlyOutput("Graph_dividends_portoflio"),
                   
                   tableOutput('table_dividends_years'),
                   tableOutput("table_sp500_selected"),
+                  #plotlyOutput("Graph_selected_sp500_dividends"),
+                  
                   
 
                 )
@@ -381,14 +464,12 @@ if (interactive()) {
               df_c$Colour[df_c$Colour=="FALSE"] <- "Green"
        
        
-         return( df_c
-                 
-                     )
+         return( df_c )
        
      })
      
      
-      df_inter_sp500 <- reactive({
+      df_inter_sp500 <- reactive({ #used in the table table_sp500_selected and for the reactive dataframe df_inter_sp500_dividends
         
                         
                         
@@ -398,13 +479,26 @@ if (interactive()) {
                  
                   #unique(df_sp500$GICS.Sub.Industry)
                 
-                
+                #selected_sp500<-filter(df_sp500, GICS.Sector=="Industrials") %>% select(Tickers, Company)
                 selected_sp500<-filter(df_sp500, GICS.Sector==input$sp500_sector) %>% select(Tickers, Company)
 
       
+                
+                
                         })
       
-      df_buy_n_hold_portfolio_value <- reactive ({
+      
+      df_inter_sp500_dividends <- reactive ({ #all dividends of the companies belonging to the selected sp500 sector
+        
+        df77=Tickers_to_Dividends(df_inter_sp500()$Tickers)
+               # ggplot(data = df77, aes(x = Year, y = Div, color = Enterprise))+ geom_line()
+               
+                aggregate(data=df77,cbind(Div) ~ Year, FUN=sum)  
+        
+        
+      })
+      
+      df_buy_n_hold_portfolio_value <- reactive ({ ## use for Graph_selected_sp500_dividends
         
         
         filtered_results <-filter(result,
@@ -431,7 +525,6 @@ if (interactive()) {
         
       
           output$Graph_dividends_policy<- renderPlotly({
-            
             
             
                  ggplotly(
@@ -466,16 +559,52 @@ if (interactive()) {
             
               output$Graph_onebuy_portoflio<-renderPlotly({
                
-                  
-              #option 1#
                        ggplotly(
-
-             
-                          ggplot(df_buy_n_hold_portfolio_value(),aes(x=ref.date, y=Value)) + geom_line()
+                          ggplot(df_buy_n_hold_portfolio_value(),aes(x=ref.date, y=Value)) +
+                            geom_line() + ggtitle("Portfolio's Historical Value")
                         )
               
              
+                                            })
+              
+              
+               output$Graph_dividends_portoflio<-renderPlotly({
+                 
+                 
+                  df_c <- filter(total_div,
+                         Year >= input$years_analysis[1] &
+                           Year <= input$years_analysis[2])
+       
+
+              df_c$Colour <-  c("FALSE",diff(df_c$Div) < 0)
+              
+              df_c$Colour[df_c$Colour=="TRUE"] <- "Red"
+              df_c$Colour[df_c$Colour=="FALSE"] <- "Green"
+                 
+                                                          ggplotly(
+                                                                  ggplot(df_c,
+                                                                         aes(x=Year, y=Div)) +
+                                                                        geom_bar(stat = "identity", colour=df_c$Colour) +
+                                                                             ggtitle("Portfolio's Tickers Dividends")
+                                                                )
+                                                               
+                                                             })
+              
+              
+              
+              
+              output$Graph_selected_sp500_dividends<-renderPlotly({
+               
+                
+                       ggplotly(
+                               ggplot(df_inter_sp500_dividends(),aes(x=Year, y=Div)) + geom_bar(stat = "identity")
+                               )
+              
+             
                                             }) 
+              
+              
+              
             
             
             ### TABLES ###
