@@ -1,7 +1,6 @@
 My projects included in this repository:
 
-<https://github.com/JAlcocerT/R_Dashboard/tree/main/Shiny%20dashboards/Stock%20Returns%20Interactive>
-
+* [Stock Returns Interactive](https://github.com/JAlcocerT/R_Dashboard/tree/main/Shiny%20dashboards/Stock%20Returns%20Interactive)
 
 ### Intro / Reminder
 
