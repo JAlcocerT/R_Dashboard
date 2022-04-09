@@ -1,3 +1,8 @@
+My projects included in this repository:
+
+<https://github.com/JAlcocerT/R_Dashboard/tree/main/Shiny%20dashboards/Stock%20Returns%20Interactive>
+
+
 ### Intro / Reminder
 
 Shiny is an R package that makes it easy to build highly interactive web apps directly in R. Using Shiny, data scientists can create interactive web apps that allow your team to dive in and explore your data as dashboards or visualizations.
