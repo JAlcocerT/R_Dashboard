@@ -59,10 +59,6 @@ cat("\f")
 
 # For Shiny
 
-
-
-
-
 library(shiny)
 library(shinythemes)
 library(shinyWidgets)
@@ -77,6 +73,10 @@ library(plotly)
 require(dplyr)
              library(dplyr)    
 library(plyr)
+
+
+
+library("priceR") #inflation / currency exchange
 
 
 # DIRECTORY:
@@ -101,13 +101,25 @@ my_data <- na.omit(my_data)
 
 ```
 
-##### 
+
+```{r inflation data}
+
+
+
+
+Year <- 1970:2020
+#nominal_prices <- rnorm(10, mean=10, sd=3)
+nominal_prices <- rep(1,length(Year))
+df_inflation <- data.frame(Year, nominal_prices)
+df_inflation$in_2020_dollars_factor <- adjust_for_inflation(nominal_prices, Year, "US", to_date = 2020)
+
+```
 
 
 ```{r gathering enterprises tickers  - good for interactive}
 
 min_year= 1970
-max_year = 2022
+max_year = 2020
             
             
               
@@ -141,10 +153,20 @@ max_year = 2022
               
               result<-as.data.frame(result_aux$df.tickers)
               
+              result$mon_yr = format(result$ref.date, "%Y-%m") 
+              
+              #result <- result %>% group_by(mon_yr) %>% filter(ref.date == max(ref.date))
+              
               rm(result_aux)
               
 
-              
+              ### SP500 history
+                            SP500_trend <- as.data.frame(BatchGetSymbols("^GSPC",
+                                      first.date=tini,
+                                      last.date=tend,
+                                      freq.data="daily")
+                                                        ) %>% 
+                                  select(Ticker = 1, Date = 13, Price = 10)
 ```
 
 
@@ -170,75 +192,12 @@ selected_sp500<-filter(df_sp500, GICS.Sector=="Real Estate") %>% select(Tickers)
 
 
 
-```{r divivends from enterprises - good for interactive}
 
-# get dividends in a loop
-# total_div<-matrix(nrow=yinterval,ncol=(length(enterprises)+1))
-# colnames(total_div)<-c("Year",enterprises)
-
-
-#pre-define an empty DF
-df <- data.frame(year=numeric(),
-                 Div=numeric(), 
-                 Enterprise=character(), 
-                 stringsAsFactors=FALSE) 
-
-
-enterprises<-tickers
+```{r user defined functions}
 
 
 
-for (k in 1:length(enterprises)) {
-   
-      a=getDividends(enterprises[k] )
-      #a=getDividends(enterprises[1] )
-      
-   
-      
-      if ( length(a)==0) { #it will skip the iteration if getdividends does not find any records
-          next
-      }
-      
-      
-      a <- data.frame(date=index(a), coredata(a))
-      colnames(a) <- c("Date","Div")
-      a$Enterprise <- replicate(nrow(a), enterprises[k])
-    
-    
-      #group by year
-      a["Year"]<-format(as.Date(a$Date, format="%d/%m/%Y"),"%Y")
-      a=aggregate(data=a,cbind(Div) ~ Year + Enterprise, FUN=sum)
-    
-    
-    
-    a <- head(a, -1)       
-    
-    
-    
-    
-     df <- rbind(df,a)
-
-}
-
-
-  
-  df["Year"]<- as.numeric(df$Year)
-
- 
-  ggplot(data = df, aes(x = Year, y = Div, color = Enterprise))+ geom_line()
-  
-
-total_div=df
-
-```
-
-
-
-```{r functions}
-
-
-
-### Get the dividends grouped by year and company of the given Tickers
+### Get the dividends grouped by year and company of the given Tickers ###
 Tickers_to_Dividends <- function(enterprises) {
 
 
@@ -296,11 +255,9 @@ total_div=Tickers_to_Dividends(tickers)
 
 df["Year"]<- as.numeric(df$Year)
 
- 
-  ggplot(data = total_div, aes(x = Year, y = Div, color = Enterprise))+ geom_line()
+ggplot(data = total_div, aes(x = Year, y = Div, color = Enterprise))+ geom_line()
 
-#to agregate per year all the dividends of the companies of the selected sector of the SP500
-
+#to agregate per year all the dividends of the companies of the selected sector of the SP500 and then get their dividends
 selected_sp500<-filter(df_sp500, GICS.Sector=="Industrials") %>% select(Tickers, Company)
 
 df77=Tickers_to_Dividends(selected_sp500$Tickers)
@@ -329,7 +286,7 @@ if (interactive()) {
     ui = fluidPage(
       #theme = shinytheme("spacelab"),
   
-  titlePanel("MVP - Release"),
+  titlePanel("Stock Returns Interactive"),
   
     ### SIDE BAR PANEL
   sidebarPanel(
@@ -367,11 +324,11 @@ if (interactive()) {
                             br(),
                             br(),
                           
-                            sliderInput("dividend_missed_opportunities", "Dividends - vista gorda",
-                            min = 0, max = 10, value = 1,width = "90%"),
-                
-                            sliderInput("dividend_missed_percentage", "Dividends - missed by X %", #when selected to 1, if there was not an increase in dividend value, its considered as a miss, if selected as 0,9, and few months the dividend would not increase/be at least 90% of its previous value, it would still passing our dividend test.
-                            min = 0, max = 1, value = 1,width = "90%"),
+                            # sliderInput("dividend_missed_opportunities", "Dividends - vista gorda",
+                            # min = 0, max = 10, value = 1,width = "90%"),
+                            # 
+                            # sliderInput("dividend_missed_percentage", "Dividends - missed by X %", #when selected to 1, if there was not an increase in dividend value, its considered as a miss, if selected as 0,9, and few months the dividend would not increase/be at least 90% of its previous value, it would still passing our dividend test.
+                            #min = 0, max = 1, value = 1,width = "90%"),
                 
                                             
                             br(),
@@ -401,13 +358,28 @@ if (interactive()) {
                 
                   br(),
                   plotlyOutput("Graph_stock_trend"),
-                  plotlyOutput("Graph_dividends_policy"),
                   
-                        textOutput("introtext_dividends"),
-                                          verbatimTextOutput("Div_years_missed"),
-                  
+                  br(),
                   plotlyOutput("Graph_onebuy_portoflio"),
                   plotlyOutput("Graph_dividends_portoflio"),
+                  
+                  
+                  br(),
+                  tableOutput('backtesting'),
+                  #tableOutput('table_sp500_and_portfolio'),
+                  
+                  
+                  br(),
+                  br(),
+                  
+                  textOutput("introtext_dividends"),
+                  verbatimTextOutput("Div_years_missed"),
+                  
+                  plotlyOutput("Graph_dividends_policy"),
+                  
+
+                  
+
                   
                   tableOutput('table_dividends_years'),
                   tableOutput("table_sp500_selected"),
@@ -516,12 +488,91 @@ if (interactive()) {
         filtered_results$Value = filtered_results$price.close * filtered_results$Amount #the value of each stock in the portolio in a given date
         
         
-        Portfolio_df = aggregate(data=filtered_results,cbind(Value) ~ ref.date, FUN=sum)
+        
+       
+        
+        
+        Portfolio_df = aggregate(data=filtered_results,cbind(Value) ~ ref.date, FUN=sum) #the selected Portfolio Tickers with their Value times the amount of shares that were allocated
+        
+         Portfolio_df <- Portfolio_df %>%
+       left_join(SP500_trend, by = c('ref.date' = 'Date'))  %>% select(ref.date,Value, Price)
+        
+        #add sp500 data for comparisong
+        
+        
+        
+       #  Portfolio_df <- Portfolio_df %>%
+       # left_join(SP500_trend , by = c('Tickers' = 'Ticker'))
         
       })
 
+      
+          df_backtesting_investments <- reactive ({ # returns when investing a certain amount in a selected porfolio
+            
+            
+            df_monthly_buy <- data.frame(mon_yr=character(), #prepare a DF to include all the monthly acquisition
+                 ticker=character(), 
+                 Bought=numeric(), 
+                 stringsAsFactors=FALSE) 
+            
+             result_eom <- result %>%
+                          filter(year(ref.date)>= input$years_analysis[1]
+                                 & year(ref.date)<= input$years_analysis[2]) %>% 
+                          group_by(mon_yr) %>% filter(ref.date == max(ref.date)) #Take the investment date as the last day of each month
+             
+             result_eom$yr <- as.numeric(format(result_eom$ref.date,'%Y'))
+             
+             
+             result_eom <- result_eom %>% 
+                              left_join(df_inflation %>% select (Year, in_2020_dollars_factor), by = c('yr' = 'Year'))
+             
+             
+             #investing in the selected period the selected amount with the variable ''Input_USD'' distributed equally across the portfolio's                     tickers
+             
+             
+             
+             for(i in 1:length(unique(result_eom$mon_yr))) {
+               
+               
+               ttt =  result_eom %>% 
+                                filter(grepl( unique(result_eom$mon_yr)[i], mon_yr )) 
+                                #filter(stringr::str_detect(mon_yr, '1970-01') )
+               
+               #buying_power <- 1000/ttt[1,"in_2020_dollars_factor"]/nrow(ttt)
+               buying_power <- input$Input_USD/ttt[1,"in_2020_dollars_factor"]/nrow(ttt)
+               ttt$Bought <- as.numeric(buying_power)/ttt$price.close 
+               
+               ttt <- ttt %>% select (mon_yr,ticker,Bought)
+               
+                df_monthly_buy <- rbind(df_monthly_buy,ttt)
+                  
+                
+                  
+             }
+             
+             
+             df_monthly_buy = aggregate(data=df_monthly_buy,cbind(Bought) ~ ticker, FUN=sum)
+             
+             
+             ## Current Dividends (as per the latest year selected in the UI, matched with the amount of stocks at the portfolio at that time)
+             
+               df_monthly_buy <- df_monthly_buy %>% 
+                              left_join(total_div[total_div$Year == 2020,] %>% select(Enterprise, Div), by = c('ticker' = 'Enterprise'))
+            
+              df_monthly_buy$Yearly_Income <- df_monthly_buy$Bought * df_monthly_buy$Div
+              
+              df_monthly_buy <- rbind(df_monthly_buy, c("Total Yearly", "-x-", "-x-", sum(as.numeric(df_monthly_buy$Yearly_Income))))
+              
+              df_monthly_buy <- rbind(df_monthly_buy, c("Total Monthly (Net)", "-x-", "-x-", sum(as.numeric(df_monthly_buy$Yearly_Income))/2*0.7/12)) #/2 since it the sum was already performed in the previous line
+              
+              
+              return(df_monthly_buy)
+              #sum(df_monthly_buy$Income)
+            
+            
+          })
 
-      ### GRAPHS ###
+      ###### GRAPHS ###### 
         
       
           output$Graph_dividends_policy<- renderPlotly({
@@ -549,7 +600,8 @@ if (interactive()) {
              
                           ggplot(subset(df_inter_results(),ticker!="AMZN"),
                                   aes(x=ref.date, y=price.close, group=ticker))
-                           + geom_line(aes(colour = ticker))
+                           + geom_line(aes(colour = ticker)) +
+                            xlab("Date") + ylab("USD") + ggtitle("Selected Tickers Value")
                         )
               
              
@@ -557,12 +609,33 @@ if (interactive()) {
             
             
             
-              output$Graph_onebuy_portoflio<-renderPlotly({
+              output$Graph_onebuy_portoflio<-renderPlotly({ #Plotting the portfolio value vs SP500 over time
                
-                       ggplotly(
-                          ggplot(df_buy_n_hold_portfolio_value(),aes(x=ref.date, y=Value)) +
-                            geom_line() + ggtitle("Portfolio's Historical Value")
-                        )
+                       # ggplotly(
+                       #    ggplot(df_buy_n_hold_portfolio_value(),aes(x=ref.date, y=Value)) +
+                       #      geom_line() + ggtitle("Portfolio's Historical Value")
+                       #  )
+                
+                
+                      #               ggplot(df_buy_n_hold_portfolio_value(), aes(ref.date)) + 
+                      # geom_line(aes(y = Value, colour = "Portfolio Value")) + 
+                      # geom_line(aes(y = Price, colour = "SP500")) +
+                      # xlab("Date") + ylab("USD") + ggtitle("Portfolio's Historical Value")
+                
+                
+                 # Year >= input$years_analysis[1] &
+                 #           Year <= input$years_analysis[2]
+                
+                   ggplot(subset( df_buy_n_hold_portfolio_value(),
+                                  year(df_buy_n_hold_portfolio_value()$ref.date)>= input$years_analysis[1] &
+                                  year(df_buy_n_hold_portfolio_value()$ref.date)<= input$years_analysis[2]),
+                          aes(ref.date)) + 
+                      geom_line(aes(y = Value, colour = "Portfolio Value")) + 
+                      geom_line(aes(y = Price, colour = "SP500")) +
+                      xlab("Date") + ylab("USD") + ggtitle("Portfolio's Historical Value")
+                 
+                 
+                 
               
              
                                             })
@@ -607,7 +680,7 @@ if (interactive()) {
               
             
             
-            ### TABLES ###
+            ##### TABLES ######
           
 output$table_dividends_years <- renderTable({
    
@@ -620,6 +693,23 @@ output$table_sp500_selected <- renderTable({
 
   
   df_inter_sp500()
+  })
+
+
+output$table_sp500_and_portfolio <- renderTable({
+
+  
+  df_buy_n_hold_portfolio_value()
+  })
+
+
+
+
+
+output$backtesting <- renderTable({
+
+  
+  df_backtesting_investments()
   })
 
 
